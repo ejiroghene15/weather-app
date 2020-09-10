@@ -46,7 +46,7 @@
 					src="https://assets6.lottiefiles.com/packages/lf20_cHA3rG.json"
 					background="transparent"
 					speed="2.5"
-					style="width: 100px; height: 100px;"
+					style="width: 100px; height: 100px"
 					loop
 					autoplay
 				></lottie-player>
@@ -116,9 +116,11 @@
 				navigator.serviceWorker
 					.register("sw.js")
 					.then((reg) => {
-						console.log("Registered");
+						// console.log("Registered");
 					})
-					.catch((err) => console.log("Registration failed: ", err));
+					.catch((err) => {
+						// console.log("Registration failed: ", err);
+					});
 			});
 		}
 	</script>
