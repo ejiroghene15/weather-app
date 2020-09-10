@@ -1,14 +1,19 @@
 @import url("https://fonts.googleapis.com/css2?family=Kumbh+Sans:wght@400;700&display=swap");
 
 :root {
-	--main-bg: #92320e;
-	--transparent-bg: #250c04e0;
+	--main-bg: #0b191e;
+	--transparent-bg: #0b191eb8;
 }
 
 body {
 	margin: 0;
 	font-family: "Kumbh Sans", sans-serif;
 	color: #ddd;
+	transition: all 0.3s 0.1s linear;
+	-webkit-transition: all 0.3s 0.1s linear;
+	-moz-transition: all 0.3s 0.1s linear;
+	-ms-transition: all 0.3s 0.1s linear;
+	-o-transition: all 0.3s 0.1s linear;
 }
 
 #main {
@@ -39,9 +44,18 @@ body {
 }
 
 #app-name span {
-	font-size: 1.2em;
+	/* font-size: 1.1em; */
 	font-weight: 700;
-	color: var(--main-bg);
+	/* color: var(--main-bg); */
+}
+
+section#loader {
+	flex: 0.7;
+	display: none;
+	backdrop-filter: blur(10px);
+	align-items: center;
+	justify-content: center;
+	background-color: var(--transparent-bg);
 }
 
 #search {
@@ -79,12 +93,14 @@ body {
 #fbk {
 	margin-top: 10px;
 	opacity: 0;
+	font-size: 15px;
 }
 
 #search_results {
 	display: none;
 	margin-top: 4rem;
 	max-height: 300px;
+	width: 70%;
 	overflow: auto;
 	padding: 0.7rem 0.5rem;
 	backdrop-filter: blur(10px);
@@ -193,6 +209,11 @@ button.deg_temp {
 	#city_search {
 		min-width: 100%;
 		padding: 0.7rem 0;
+	}
+
+	#search_results {
+		margin-bottom: 4rem;
+		width: 100%;
 	}
 }
 

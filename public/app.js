@@ -9,6 +9,7 @@ let w_farenheit = document.querySelector("#farenheit");
 let city_name = document.querySelector("#city_name");
 let day = document.querySelector("#day");
 let latest_sr = document.querySelector("#latest_sr");
+let loading = document.querySelector("#loader");
 const CELSIUS = 273.15;
 const API_KEY = "eb9d62065796454fb18dca8227500999";
 const API_URL = "https://api.openweathermap.org/data/2.5";
@@ -23,6 +24,8 @@ function weatherSearch() {
 	if (cityValue != "") {
 		let _city = cityValue.toLowerCase();
 		// console.log(_city);
+		weather_info.style.display = "none";
+		loading.style.display = "flex";
 		getWeatherData(_city);
 	} else {
 		msg_feedback.style.opacity = 1;
@@ -77,9 +80,11 @@ function getWeatherData(_city) {
 				let save_city_data = JSON.stringify(res);
 				localStorage.setItem(`${_city}`, save_city_data);
 				displayWeatherData(res); // display the data for the city
-				recentSearch(); // add it to the list of currently searched cities
-				msg_feedback.style.opacity = 0;
+				recentSearch(); // update recent searches
+				loading.style.display = "none"; // hide loading icon
+				msg_feedback.style.opacity = 0; // hide feedback
 			} else {
+				loading.style.display = "none"; // hide loading icon
 				msg_feedback.textContent = res.message;
 				msg_feedback.style.opacity = 1;
 			}
@@ -105,7 +110,7 @@ function displayWeatherData(res) {
 	let feel = feels_like - CELSIUS;
 
 	// console.log(description, celsius, farenheit);
-	w_img.src = `http://openweathermap.org/img/wn/${icon}@2x.png`;
+	w_img.src = `https://openweathermap.org/img/wn/${icon}@2x.png`;
 	w_desc.textContent = description;
 	w_celsius.innerHTML = `${Math.round(celsius)}<sup>o</sup> C`;
 	// w_farenheit.innerHTML = `${Math.round(farenheit)}<sup>o</sup>`;
