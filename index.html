@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Weather App</title>
+		<link
+			href="https://fonts.googleapis.com/icon?family=Material+Icons"
+			rel="stylesheet"
+		/>
+		<link rel="stylesheet" href="style.css" />
+		<link rel="shortcut icon" href="ico.gif" type="image/x-icon" />
+		<link rel="manifest" href="./manifest.json" />
+		<meta name="theme-color" content="#250c04e0" />
+	</head>
+
+	<body>
+		<main id="main">
+			<div id="search">
+				<h2 id="app-name"><span>X</span>Weather</h2>
+				<form>
+					<div class="fg">
+						<input
+							type="text"
+							id="city_search"
+							placeholder="Enter a city"
+							autocomplete="off"
+						/>
+						<i class="material-icons">search</i>
+					</div>
+					<h4 id="fbk">Enter a city to search</h4>
+				</form>
+
+				<section id="search_results">
+					<div style="padding: 0.8rem 0">
+						<label for="">Recent Search</label>
+						<hr />
+					</div>
+					<div id="latest_sr"></div>
+				</section>
+			</div>
+
+			<div id="weather-info">
+				<section id="top">
+					<h2 id="city_name"></h2>
+					<h4 id="day"></h4>
+					<div>
+						<div style="display: flex; justify-content: center">
+							<h1 id="celsius" style="align-self: center"></h1>
+							<img alt="" id="w-img" />
+						</div>
+						<!-- <h1 id="farenheit"></h1> -->
+						<p id="w-desc"></p>
+					</div>
+				</section>
+
+				<section style="align-self: stretch" id="more-weather-details">
+					<p id="feels_like">
+						<span>
+							<img src="./imgs/temperature.svg" alt="" class="icns" />Feels like
+						</span>
+						<label> </label>
+					</p>
+					<p id="humidity">
+						<span>
+							<img src="./imgs/humidity.svg" alt="" class="icns" />Humidity
+						</span>
+						<label> </label>
+					</p>
+					<p id="sunrise">
+						<span>
+							<img src="./imgs/sunrise.svg" alt="" class="icns" />Sunrise
+						</span>
+						<label> </label>
+					</p>
+					<p id="sunset">
+						<span>
+							<img src="./imgs/sunset.svg" alt="" class="icns" />Sunset
+						</span>
+						<label> </label>
+					</p>
+				</section>
+				<!-- <section id="bottom">
+					<button class="celsius deg_temp"><sup>o</sup>C</button>
+					|
+					<button class="farenheit deg_temp"><sup>o</sup>F</button>
+				</section> -->
+			</div>
+		</main>
+	</body>
+
+	<script src="./app.js"></script>
+	<script>
+		if ("serviceWorker" in navigator) {
+			window.addEventListener("load", function () {
+				navigator.serviceWorker
+					.register("./sw.js")
+					.then((reg) => {
+						console.log("Registered");
+					})
+					.catch((err) => console.log("Registration failed: ", err));
+			});
+		}
+	</script>
+</html>
