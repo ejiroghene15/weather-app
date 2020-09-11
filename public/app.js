@@ -165,6 +165,7 @@ function getDay(timezone, ts) {
 		weekday: "short",
 		month: "short",
 		day: "numeric",
+		hour12: true,
 		hour: "2-digit",
 		minute: "2-digit",
 	});
