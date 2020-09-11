@@ -156,7 +156,9 @@ function getDay(timezone, ts) {
 	let ut_year = date.getUTCFullYear();
 	let ut_mnth = date.getUTCMonth();
 	let ut_hrs = date.getUTCHours();
-	let utc_date = new Date(Date.UTC(ut_year, ut_mnth, ut_date, ut_hrs));
+	let ut_min = date.getUTCMinutes();
+
+	let utc_date = new Date(Date.UTC(ut_year, ut_mnth, ut_date, ut_hrs, ut_min));
 
 	let curr_date = utc_date.toLocaleDateString(undefined, {
 		timeZone: `${timezone}`,
@@ -176,7 +178,9 @@ function formatTime(timezone, ts) {
 	let ut_year = date.getUTCFullYear();
 	let ut_mnth = date.getUTCMonth();
 	let ut_hrs = date.getUTCHours();
-	let utc_date = new Date(Date.UTC(ut_year, ut_mnth, ut_date, ut_hrs));
+	let ut_min = date.getUTCMinutes();
+
+	let utc_date = new Date(Date.UTC(ut_year, ut_mnth, ut_date, ut_hrs, ut_min));
 
 	let time = utc_date.toLocaleTimeString(undefined, {
 		timeZone: `${timezone}`,
