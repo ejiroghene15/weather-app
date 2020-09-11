@@ -57,7 +57,7 @@ function recentSearch() {
 			let get_city = localStorage.getItem(`${city}`);
 			let {
 				timezone,
-				current: { dt },
+				current: { dt }
 			} = JSON.parse(get_city);
 			let { curr_date } = getDay(timezone, dt);
 			latest_sr.insertAdjacentHTML("afterbegin", sr_template(city, curr_date));
@@ -165,7 +165,6 @@ function getDay(timezone, ts) {
 		weekday: "short",
 		month: "short",
 		day: "numeric",
-		hour12: true,
 		hour: "2-digit",
 		minute: "2-digit",
 	});
