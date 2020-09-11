@@ -1,6 +1,6 @@
 const staticCache = "site-cache-v1";
 const dynamicCache = "site-dynamic-cache-v1";
-const resourceToPrecache = ["/"];
+const resourceToPrecache = ["/", "./imgs/animation.gif"];
 
 self.addEventListener("install", (event) => {
 	event.waitUntil(

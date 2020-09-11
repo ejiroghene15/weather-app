@@ -55,8 +55,11 @@ function recentSearch() {
 		latest_sr.innerHTML = null;
 		Object.keys(localStorage).forEach((city) => {
 			let get_city = localStorage.getItem(`${city}`);
-			let { dt } = JSON.parse(get_city);
-			let { curr_date } = getDay(dt);
+			let {
+				timezone,
+				current: { dt },
+			} = JSON.parse(get_city);
+			let { curr_date } = getDay(timezone, dt);
 			latest_sr.insertAdjacentHTML("afterbegin", sr_template(city, curr_date));
 		});
 
@@ -77,12 +80,24 @@ function getWeatherData(_city) {
 		.then((res) => res.json())
 		.then((res) => {
 			if (res.cod != 404) {
-				let save_city_data = JSON.stringify(res);
-				localStorage.setItem(`${_city}`, save_city_data);
-				displayWeatherData(res); // display the data for the city
-				recentSearch(); // update recent searches
-				loading.style.display = "none"; // hide loading icon
-				msg_feedback.style.opacity = 0; // hide feedback
+				let { lat, lon } = res.coord;
+				let {
+					name,
+					sys: { country },
+				} = res;
+				console.log(name, country);
+				fetch(`${API_URL}/onecall?lat=${lat}&lon=${lon}&appid=${API_KEY}`)
+					.then((res) => res.json())
+					.then((res) => {
+						res.current.name = name;
+						res.current.country = country;
+						let save_city_data = JSON.stringify(res);
+						localStorage.setItem(`${_city}`, save_city_data);
+						displayWeatherData(res); // display the data for the city
+						recentSearch(); // update recent searches
+						loading.style.display = "none"; // hide loading icon
+						msg_feedback.style.opacity = 0; // hide feedback
+					});
 			} else {
 				loading.style.display = "none"; // hide loading icon
 				msg_feedback.textContent = res.message;
@@ -100,13 +115,24 @@ function getWeatherData(_city) {
 }
 
 function displayWeatherData(res) {
+	let { current, timezone } = res;
+	let {
+		dt,
+		weather,
+		temp,
+		feels_like,
+		humidity,
+		sunrise,
+		sunset,
+		name,
+		country,
+	} = current;
 	weather_info.style.display = "flex";
-	let { description, icon } = res.weather[0];
-	let { temp, feels_like } = res.main;
+	let { description, icon } = weather[0];
 	let { celsius, farenheit } = getTemp(temp);
-	let { curr_date } = getDay(res.dt);
-	let sunrise = formatTime(res.sys.sunrise);
-	let sunset = formatTime(res.sys.sunset);
+	let { curr_date } = getDay(timezone, dt);
+	let _sunrise = formatTime(timezone, sunrise);
+	let _sunset = formatTime(timezone, sunset);
 	let feel = feels_like - CELSIUS;
 
 	// console.log(description, celsius, farenheit);
@@ -114,21 +140,26 @@ function displayWeatherData(res) {
 	w_desc.textContent = description;
 	w_celsius.innerHTML = `${Math.round(celsius)}<sup>o</sup> C`;
 	// w_farenheit.innerHTML = `${Math.round(farenheit)}<sup>o</sup>`;
-	city_name.innerHTML = `${res.name}, <small style='font-size: .8em'>${res.sys.country}</small>`;
+	city_name.innerHTML = `${name}, <small style='font-size: .8em'>${country}</small>`;
 	day.textContent = `${curr_date}`;
-	document.querySelector(
-		"#humidity label"
-	).textContent = `${res.main.humidity}%`;
-	document.querySelector("#sunrise label").textContent = sunrise;
-	document.querySelector("#sunset label").textContent = sunset;
+	document.querySelector("#humidity label").textContent = `${humidity}%`;
+	document.querySelector("#sunrise label").textContent = _sunrise;
+	document.querySelector("#sunset label").textContent = _sunset;
 	document.querySelector("#feels_like label").innerHTML = `${Math.round(
 		feel
 	)}<sup>o</sup> C`;
 }
 
-function getDay(ts) {
+function getDay(timezone, ts) {
 	let date = ts == "" ? new Date() : new Date(ts * 1000);
-	let curr_date = date.toLocaleDateString(undefined, {
+	let ut_date = date.getUTCDate();
+	let ut_year = date.getUTCFullYear();
+	let ut_mnth = date.getUTCMonth();
+	let ut_hrs = date.getUTCHours();
+	let utc_date = new Date(Date.UTC(ut_year, ut_mnth, ut_date, ut_hrs));
+
+	let curr_date = utc_date.toLocaleDateString(undefined, {
+		timeZone: `${timezone}`,
 		weekday: "short",
 		month: "short",
 		day: "numeric",
@@ -138,9 +169,17 @@ function getDay(ts) {
 	return { curr_date };
 }
 
-function formatTime(ts) {
+function formatTime(timezone, ts) {
 	let date = new Date(ts * 1000);
-	let time = date.toLocaleTimeString(undefined, {
+
+	let ut_date = date.getUTCDate();
+	let ut_year = date.getUTCFullYear();
+	let ut_mnth = date.getUTCMonth();
+	let ut_hrs = date.getUTCHours();
+	let utc_date = new Date(Date.UTC(ut_year, ut_mnth, ut_date, ut_hrs));
+
+	let time = utc_date.toLocaleTimeString(undefined, {
+		timeZone: `${timezone}`,
 		hour: "2-digit",
 		minute: "2-digit",
 	});
