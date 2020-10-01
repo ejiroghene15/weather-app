@@ -14,6 +14,13 @@ const CELSIUS = 273.15;
 const API_KEY = "eb9d62065796454fb18dca8227500999";
 const API_URL = "https://api.openweathermap.org/data/2.5";
 
+if ("geolocation" in navigator) {
+	navigator.geolocation.getCurrentPosition(({ coords }) => {
+		let { latitude, longitude } = coords;
+		getWeatherData(null, latitude, longitude);
+	});
+}
+
 form.addEventListener("submit", () => {
 	event.preventDefault();
 	weatherSearch();
@@ -57,7 +64,7 @@ function recentSearch() {
 			let get_city = localStorage.getItem(`${city}`);
 			let {
 				timezone,
-				current: { dt }
+				current: { dt },
 			} = JSON.parse(get_city);
 			let { curr_date } = getDay(timezone, dt);
 			latest_sr.insertAdjacentHTML("afterbegin", sr_template(city, curr_date));
@@ -74,8 +81,12 @@ function recentSearch() {
 	}
 }
 
-function getWeatherData(_city) {
+function getWeatherData(_city, lat = null, lon = null) {
 	let req_url = `${API_URL}/weather?q=${_city}&appid=${API_KEY}`;
+	if (lat != null && lon != null) {
+		req_url = `${API_URL}/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}`;
+	}
+
 	fetch(req_url)
 		.then((res) => res.json())
 		.then((res) => {
@@ -92,7 +103,7 @@ function getWeatherData(_city) {
 						res.current.name = name;
 						res.current.country = country;
 						let save_city_data = JSON.stringify(res);
-						localStorage.setItem(`${_city}`, save_city_data);
+						localStorage.setItem(`${name}`, save_city_data);
 						displayWeatherData(res); // display the data for the city
 						recentSearch(); // update recent searches
 						loading.style.display = "none"; // hide loading icon
